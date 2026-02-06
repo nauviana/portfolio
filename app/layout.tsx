@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: "Nauviana Pita Rosa — Portfolio",
     description:
       "Designer & Flutter Developer. Turning ideas into meaningful digital products.",
-    images: ["/og-image.png"],
+    images: ["/linkedin.png"],
   },
 };
 
