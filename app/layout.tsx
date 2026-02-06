@@ -1,10 +1,26 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Novi's Portfolio",
-  description: "Flutter Mobile Developer • UI/UX • Graphic Design",
+export const metadata = {
+  title: "Nauviana Pita Rosa — Portfolio",
+  description: "Flutter Developer & Creative Designer",
+  openGraph: {
+    title: "Nauviana Pita Rosa — Portfolio",
+    description: "Flutter Developer & Creative Designer",
+    url: "https://portfolio-alpha-gray-12.vercel.app",
+    siteName: "Nauviana Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Nauviana Portfolio Preview",
+      },
+    ],
+    type: "website",
+  },
 };
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
