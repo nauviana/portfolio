@@ -327,38 +327,25 @@ export default function Home() {
       />
 
       {/* Pill Glass Navbar */}
-      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[min(920px,92vw)]">
-        <motion.nav
-          initial={{ opacity: 0, y: -14, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.55, ease: easeOut }}
-          className="
-            flex items-center justify-between gap-2
-            rounded-full px-3 py-2
-            bg-black/20 backdrop-blur-xl
-            border border-white/10
-            shadow-[0_10px_40px_rgba(0,0,0,0.35)]
-          "
-        >
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noreferrer" : undefined}
-              className="
-                flex-1 text-center
-                rounded-full px-4 py-3
-                text-sm text-gray-300
-                hover:text-white hover:bg-white/5
-                transition
-              "
-            >
-              {item.label}
-            </a>
-          ))}
-        </motion.nav>
+      <header className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[min(920px,94vw)]">
+        <nav className="rounded-full px-2 py-2 bg-black/20 backdrop-blur-xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.35)] overflow-x-auto">
+          <div className="flex items-center gap-2 min-w-max">
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                className="shrink-0 text-center rounded-full px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </nav>
       </header>
+
+
 
       {/* ===================== HOME ===================== */}
       <section
@@ -605,8 +592,16 @@ export default function Home() {
               title="View detail"
             >
               <div className="relative h-40 rounded-lg overflow-hidden border border-white/10 bg-white/5">
-                <Image src={p.images[0]} alt={p.title} fill className="object-cover" />
+                <Image
+                  src={p.images[0]}
+                  alt={p.title}
+                  fill
+                  sizes="(max-width: 768px) 90vw, 360px"
+                  className="object-cover"
+                  loading="eager"
+                />
               </div>
+
 
               <div className="mt-4 flex items-center justify-between gap-3">
                 <p className="font-semibold">{p.title}</p>
