@@ -28,9 +28,28 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   text-rendering: geometricPrecision;
+  overflow-x: hidden; /* ✅ tambahan: cegah geser horizontal */
 }
 
 /* Optional: nicer selection */
 ::selection {
   background: rgba(251, 146, 60, 0.25); /* orange-ish */
+}
+
+/* Optional: nicer focus for accessibility */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(251, 146, 60, 0.55);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+/* Optional: reduce motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

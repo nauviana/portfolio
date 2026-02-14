@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const RESUME_URL =
-  "https://drive.google.com/file/d/1fx3EOCf7To84Z3_h8c70Wjk_S1jihWFx/view?usp=sharing";
+  "https://drive.google.com/drive/folders/1zyoM6RY0f8bFjQDp1pe_AjPNMP5spmIA?usp=sharing";
 
 type NavItem = {
   label: string;
@@ -30,7 +30,6 @@ type ProjectItem = {
   id: string;
   title: string;
   desc: string;
-  tag: string;
   images: string[];
   platform?: string;
   highlights?: string[];
@@ -55,16 +54,6 @@ const reveal = {
     y: 0,
     filter: "blur(0px)",
     transition: { duration: 0.6, ease: easeOut },
-  },
-};
-
-const revealFast = {
-  hidden: { opacity: 0, y: 10, filter: "blur(6px)" },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.45, ease: easeOut },
   },
 };
 
@@ -95,6 +84,13 @@ const modalPanel = {
   hidden: { opacity: 0, scale: 0.98, y: 10 },
   show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.25, ease: easeOut } },
   exit: { opacity: 0, scale: 0.98, y: 10, transition: { duration: 0.2, ease: easeOut } },
+};
+
+// Mobile menu animation
+const mobileMenuPanel = {
+  hidden: { opacity: 0, y: -8, scale: 0.99, filter: "blur(6px)" },
+  show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0.2, ease: easeOut } },
+  exit: { opacity: 0, y: -8, scale: 0.99, filter: "blur(6px)", transition: { duration: 0.16, ease: easeOut } },
 };
 
 export default function Home() {
@@ -156,6 +152,29 @@ export default function Home() {
   }, [openProjectId]);
 
   // ======================
+  // Mobile Menu
+  // ======================
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // close mobile menu on resize to desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 768) setMobileMenuOpen(false); // md breakpoint
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // lock body scroll when mobile menu open
+  useEffect(() => {
+    if (mobileMenuOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  // ======================
   // Nav
   // ======================
   const navItems: NavItem[] = [
@@ -207,66 +226,62 @@ export default function Home() {
   ];
 
   const appProjects: ProjectItem[] = [
-    {
-      id: "app1",
-      title: "Anime image generator",
-      desc:
-        "Developed an iOS AI image-generation app using Flutter and API to transform photos into anime styles. Built the UI/UX flow (onboarding, style selection, before–after slider), integrated AdMob, and handled coding, prompt engineering, and assets. RevenueCat and App Store publishing were handled by another team.",
-      tag: "Flutter",
-      images: ["/assets/projects/app1v2.jpg", "/assets/projects/app1_2.jpg"],
-      platform: "Android / iOS",
-      highlights: ["Flutter", "REST API", "AdMob", "Xcode"],
-    },
-    {
-      id: "app2",
-      title: "Bedroom design app",
-      desc:
-        "Built a Flutter-based bedroom design app that integrates an image-processing API to transform room photos and display results with before–after comparison.",
-      tag: "Flutter",
-      images: ["/assets/projects/app2v2.jpg", "/assets/projects/app2_2.jpg"],
-      platform: "Android / iOS",
-      highlights: ["REST API", "Flutter", "Dart"],
-    },
-    {
-      id: "app3",
-      title: "Party design app",
-      desc:
-        "Built a Flutter-based party design app that integrates an image-generation API to create themed party decorations from photos, featuring asynchronous processing and a modular, performance-focused UI.",
-      tag: "Flutter",
-      images: ["/assets/projects/app3v2.jpg", "/assets/projects/app3_2.jpg"],
-      platform: "Android / iOS",
-      highlights: ["REST API", "Flutter", "Dart"],
-    },
-    {
-      id: "app4",
-      title: "compress and convert image app",
-      desc:
-        "Built a Flutter-based photo compression app that resizes and compresses images efficiently, supports gallery saving, and maintains smooth performance through asynchronous image processing.",
-      tag: "Flutter",
-      images: ["/assets/projects/app4.jpg", "/assets/projects/app4v2.jpg"],
-      platform: "Android / iOS",
-      highlights: ["flutter", "image processing", "smooth performance"],
-    },
-    {
-      id: "app5",
-      title: "Kitchen design app",
-      desc: "Short description about this Flutter app.",
-      tag: "Flutter",
-      images: ["/assets/projects/app5.jpg", "/assets/projects/app5_2.jpg"],
-      platform: "Android / iOS",
-      highlights: ["REST API", "Flutter", "Dart"],
-    },
-    {
-      id: "app6",
-      title: "Zoom 40x Camera app",
-      desc:
-        "Built a high-zoom camera application using Flutter, featuring up to 40× digital zoom, image stabilization, and enhanced low-light performance. The app uses a native camera controller for real-time processing and offers a clean, minimalist UI. Monetization is implemented through AdMob.",
-      tag: "Flutter",
-      images: ["/assets/projects/app6.jpg", "/assets/projects/app6_2.jpg"],
-      platform: "Android / iOS",
-      highlights: ["Dart", "Camera Controller", "AdMob", "Flutter"],
-    },
-  ];
+  {
+    id: "app1",
+    title: "Anime image generator",
+    desc:
+      "Developed an iOS AI image-generation app using Flutter and API to transform photos into anime styles. Built the UI/UX flow (onboarding, style selection, before–after slider), integrated AdMob, and handled coding, prompt engineering, and assets. RevenueCat and App Store publishing were handled by another team.",
+    images: ["/assets/projects/app1v2.jpg", "/assets/projects/app1_2.jpg"],
+    platform: "Android / iOS",
+    highlights: ["Flutter", "REST API", "AdMob", "Xcode"],
+  },
+  {
+    id: "app2",
+    title: "Bedroom design app",
+    desc:
+      "Built a Flutter-based bedroom design app that integrates an image-processing API to transform room photos and display results with before–after comparison.",
+    images: ["/assets/projects/app2v2.jpg", "/assets/projects/app2_2.jpg"],
+    platform: "Android / iOS",
+    highlights: ["REST API", "Flutter", "Dart"],
+  },
+  {
+    id: "app3",
+    title: "Party design app",
+    desc:
+      "Built a Flutter-based party design app that integrates an image-generation API to create themed party decorations from photos, featuring asynchronous processing and a modular, performance-focused UI.",
+    images: ["/assets/projects/app3v2.jpg", "/assets/projects/app3_2.jpg"],
+    platform: "Android / iOS",
+    highlights: ["REST API", "Flutter", "Dart"],
+  },
+  {
+    id: "app4",
+    title: "Compress and convert image app",
+    desc:
+      "Built a Flutter-based photo compression app that resizes and compresses images efficiently, supports gallery saving, and maintains smooth performance through asynchronous image processing.",
+    images: ["/assets/projects/app4.jpg", "/assets/projects/app4v2.jpg"],
+    platform: "Android / iOS",
+    highlights: ["Flutter", "Image Processing", "Async Performance"],
+  },
+  {
+    id: "app5",
+    title: "Kitchen design app",
+    desc:
+      "Built a Flutter-based kitchen design app that integrates an AI image-generation API to transform kitchen photos, featuring before–after comparison and a modular, performance-focused UI architecture.",
+    images: ["/assets/projects/app5.jpg", "/assets/projects/app5_2.jpg"],
+    platform: "Android / iOS",
+    highlights: ["REST API", "Flutter", "Dart"],
+  },
+  {
+    id: "app6",
+    title: "Zoom 40x Camera app",
+    desc:
+      "Built a high-zoom camera application using Flutter, featuring up to 40× digital zoom, image stabilization, and enhanced low-light performance. The app uses a native camera controller for real-time processing and offers a clean, minimalist UI. Monetization is implemented through AdMob.",
+    images: ["/assets/projects/app6.jpg", "/assets/projects/app6_2.jpg"],
+    platform: "Android / iOS",
+    highlights: ["Dart", "Camera Controller", "AdMob", "Flutter"],
+  },
+];
+
 
   const designWorks: DesignItem[] = [
     { image: "/assets/design/d1.jpg", width: 1080, height: 1350, link: "#" },
@@ -284,9 +299,13 @@ export default function Home() {
   // Keyboard: Esc close + Arrow left/right slide
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!openProjectId) return;
+      // close mobile menu with Esc
+      if (e.key === "Escape") {
+        if (mobileMenuOpen) setMobileMenuOpen(false);
+        if (openProjectId) setOpenProjectId(null);
+      }
 
-      if (e.key === "Escape") setOpenProjectId(null);
+      if (!openProjectId) return;
 
       if (e.key === "ArrowLeft") {
         setSlideIndex((i) => Math.max(0, i - 1));
@@ -299,7 +318,7 @@ export default function Home() {
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [openProjectId, selectedProject?.images.length]);
+  }, [openProjectId, selectedProject?.images.length, mobileMenuOpen]);
 
   return (
     <main
@@ -326,24 +345,139 @@ export default function Home() {
         transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Pill Glass Navbar */}
-      <header className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[min(920px,94vw)]">
-        <nav className="rounded-full px-2 py-2 bg-black/20 backdrop-blur-xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.35)] overflow-x-auto">
-          <div className="flex items-center gap-2 min-w-max">
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noreferrer" : undefined}
-                className="shrink-0 text-center rounded-full px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap"
-              >
-                {item.label}
-              </a>
-            ))}
+      {/* ===================== NAVBAR (Desktop center pill + Mobile hamburger) ===================== */}
+      <header className="fixed top-4 md:top-6 z-50 w-full">
+        {/* Desktop pill navbar: ALWAYS CENTER */}
+        <div className="hidden md:block fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[min(600px,90vw)]">
+
+          <nav className="rounded-full px-2 py-2 bg-black/20 backdrop-blur-xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.35)] overflow-x-auto">
+            <div className="flex items-center gap-2 min-w-max justify-center">
+              {navItems.map((nav) => (
+                <a
+                  key={nav.label}
+                  href={nav.href}
+                  target={nav.external ? "_blank" : undefined}
+                  rel={nav.external ? "noreferrer" : undefined}
+                  className="shrink-0 text-center rounded-full px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap"
+                >
+                  {nav.label}
+                </a>
+              ))}
+            </div>
+          </nav>
+        </div>
+
+        {/* Mobile navbar: full width */}
+        <div className="md:hidden px-3">
+          <div className="w-full rounded-full px-3 py-2 bg-black/20 backdrop-blur-xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.35)] flex items-center justify-between">
+            <a href="#home" className="text-sm font-semibold text-white/90 px-2 py-2">
+              Novi
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="w-11 h-11 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition flex items-center justify-center"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              title={mobileMenuOpen ? "Close" : "Menu"}
+            >
+              <span className="relative w-6 h-6 block">
+                <span
+                  className={[
+                    "absolute left-0 top-[6px] h-[2px] w-6 bg-white/80 transition",
+                    mobileMenuOpen ? "translate-y-[6px] rotate-45" : "",
+                  ].join(" ")}
+                />
+                <span
+                  className={[
+                    "absolute left-0 top-[12px] h-[2px] w-6 bg-white/80 transition",
+                    mobileMenuOpen ? "opacity-0" : "opacity-100",
+                  ].join(" ")}
+                />
+                <span
+                  className={[
+                    "absolute left-0 top-[18px] h-[2px] w-6 bg-white/80 transition",
+                    mobileMenuOpen ? "-translate-y-[6px] -rotate-45" : "",
+                  ].join(" ")}
+                />
+              </span>
+            </button>
           </div>
-        </nav>
+        </div>
       </header>
+
+      {/* Mobile menu overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            variants={modalOverlay}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+            className="md:hidden fixed inset-0 z-[80] bg-black/60 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+            role="dialog"
+            aria-modal="true"
+          >
+            <motion.div
+              variants={mobileMenuPanel}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+              onClick={(e) => e.stopPropagation()}
+              className="
+                absolute top-[76px] left-3 right-3
+                rounded-2xl
+                bg-[#08141e]/92
+                border border-white/10
+                shadow-[0_30px_100px_rgba(0,0,0,0.7)]
+                overflow-hidden
+              "
+            >
+              <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
+                <p className="text-sm font-semibold text-white/90">Menu</p>
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition flex items-center justify-center"
+                  aria-label="Close"
+                  title="Close"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="p-3">
+                {navItems.map((nav) => {
+                  const isExternal = !!nav.external;
+                  return (
+                    <a
+                      key={nav.label}
+                      href={nav.href}
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noreferrer" : undefined}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="
+                        block rounded-xl px-4 py-3
+                        text-sm text-gray-200
+                        hover:bg-white/5 hover:text-white
+                        transition
+                      "
+                    >
+                      {nav.label}
+                      {isExternal ? <span className="ml-2 text-white/50">↗</span> : null}
+                    </a>
+                  );
+                })}
+              </div>
+
+              <div className="px-5 py-4 border-t border-white/10 text-xs text-white/45">
+                Tip: tap outside to close.
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
 
@@ -357,7 +491,12 @@ export default function Home() {
         "
       >
         {/* Left */}
-        <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+        >
           <motion.p variants={item} className="text-gray-400 mb-3 mt-1">
             Hello<span className="text-orange-400"></span>
           </motion.p>
@@ -515,7 +654,13 @@ export default function Home() {
         <div className="grid md:grid-cols-2 gap-12">
           <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
             <h2 className="text-2xl md:text-3xl font-semibold">Experience</h2>
-            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-8 space-y-10">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-8 space-y-10"
+            >
               {experienceItems.map((itemx, index) => (
                 <motion.div key={`${itemx.role}-${index}`} variants={item} className="relative pl-8">
                   <div className="absolute left-2 top-0 h-full w-px bg-white/10" />
@@ -530,7 +675,13 @@ export default function Home() {
 
           <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
             <h2 className="text-2xl md:text-3xl font-semibold">Honor & Awards</h2>
-            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-8 space-y-10">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-8 space-y-10"
+            >
               {awardItems.map((itemx, index) => (
                 <motion.div key={`${itemx.role}-${index}`} variants={item} className="relative pl-8">
                   <div className="absolute left-2 top-0 h-full w-px bg-white/10" />
@@ -550,7 +701,13 @@ export default function Home() {
         <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
           <h2 className="text-2xl md:text-3xl font-semibold mb-10">Organizations</h2>
 
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="space-y-10">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            className="space-y-10"
+          >
             {organizationItems.map((itemx, index) => (
               <motion.div key={`${itemx.name}-${index}`} variants={item} className="relative pl-8">
                 <div className="absolute left-2 top-0 h-full w-px bg-white/10" />
@@ -569,11 +726,23 @@ export default function Home() {
 
       {/* ===================== PROJECTS ===================== */}
       <section id="projects" className="scroll-mt-1 max-w-6xl mx-auto px-6 py-16">
-        <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="flex items-end justify-between gap-6">
+        <motion.div
+          variants={reveal}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="flex items-end justify-between gap-6"
+        >
           <h2 className="text-3xl font-bold">Apps (6)</h2>
         </motion.div>
 
-        <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.18 }} className="mt-8 grid md:grid-cols-3 gap-5">
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.18 }}
+          className="mt-8 grid md:grid-cols-3 gap-5"
+        >
           {appProjects.map((p) => (
             <motion.button
               key={p.id}
@@ -602,19 +771,40 @@ export default function Home() {
                 />
               </div>
 
+              <div className="mt-4">
+  <p className="font-semibold">{p.title}</p>
+</div>
 
-              <div className="mt-4 flex items-center justify-between gap-3">
-                <p className="font-semibold">{p.title}</p>
-                <span className="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10 text-gray-200">
-                  {p.tag}
-                </span>
-              </div>
 
               <p className="text-sm text-gray-300 mt-2 line-clamp-3">{p.desc}</p>
 
-              <div className="mt-auto pt-4">
-                <p className="text-sm text-orange-300 hover:text-orange-200 transition">View Details</p>
+              {/* Tech stack pills */}
+              {p.highlights?.length ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {p.highlights.slice(0, 4).map((tech) => (
+                    <span
+                      key={tech}
+                      className="
+          px-3 py-1 text-xs
+          rounded-full
+          bg-white/5
+          border border-white/10
+          text-white/70
+          backdrop-blur
+        "
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+
+              <div className="mt-auto pt-5">
+                <p className="text-sm text-orange-300 hover:text-orange-200 transition">
+                  View Details
+                </p>
               </div>
+
             </motion.button>
           ))}
         </motion.div>
@@ -631,7 +821,13 @@ export default function Home() {
           flex items-center justify-center
         "
       >
-        <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.25 }} className="text-center max-w-xl">
+        <motion.div
+          variants={reveal}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+          className="text-center max-w-xl"
+        >
           <p className="text-orange-400 text-sm tracking-widest uppercase">Graphic Design</p>
 
           <h2 className="mt-4 text-4xl md:text-5xl font-bold">Soon Upload</h2>
@@ -641,7 +837,13 @@ export default function Home() {
             will be available here soon.
           </p>
 
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.25 }} className="mt-10 flex justify-center gap-3 flex-wrap">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.25 }}
+            className="mt-10 flex justify-center gap-3 flex-wrap"
+          >
             {["UI Design", "Branding", "Poster", "Social Media"].map((t) => (
               <motion.span
                 key={t}
@@ -656,11 +858,14 @@ export default function Home() {
       </section>
 
       {/* ===================== ABOUT ===================== */}
-      <section
-        id="about"
-        className="scroll-mt-1 max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-start"
-      >
-        <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.18 }} className="space-y-4">
+      <section id="about" className="scroll-mt-1 max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-start">
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.18 }}
+          className="space-y-4"
+        >
           {[
             { title: "Flutter Mobile Developer", desc: "Build apps: architecture, UI, API integration, performance, and clean code." },
             { title: "UI/UX & Product Thinking", desc: "Design flow: wireframe → component system → prototype → consistent experience." },
@@ -699,7 +904,7 @@ export default function Home() {
               rel="noreferrer"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-orange-400 text-black font-medium hover:bg-orange-300 transition"
             >
-              Open Resume (Drive) <span aria-hidden>↗</span>
+              Open Resume (Drive)
             </motion.a>
           </div>
         </motion.div>
@@ -732,12 +937,10 @@ export default function Home() {
             >
               {/* header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-                <div className="flex items-center gap-3">
-                  <p className="font-semibold text-white">{selectedProject.title}</p>
-                  <span className="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10 text-white/80">
-                    {selectedProject.tag}
-                  </span>
-                </div>
+                <p className="font-semibold text-white">
+  {selectedProject.title}
+</p>
+
 
                 <button
                   type="button"
